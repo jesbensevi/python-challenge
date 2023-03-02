@@ -6,6 +6,8 @@
 
 Se crearon 2 microservicios para la solución del problema, el primero(**ms-signin**) se encarga del login del usuario, mientras que el segundo(**ms-signout**) se encarga de cerrar la sesión del usuario, también se creo una base de datos PostgreSQL para almacenar los datos de los usuarios.
 
+Se tiene tambien 2 workflows que hacen un docker build de cada MS para mantener la integridad de los mismos.
+
 ### Deployment
 
 Para el despliegue solo es necesario tener instalado Docker:
