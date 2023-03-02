@@ -1,0 +1,77 @@
+version: '3.7'
+services:
+  ms-signin:
+    restart: always
+    container_name: ms-signin
+    image: ms-signin
+    build:
+      context: ./ms-signin
+      dockerfile: Dockerfile
+    environment:
+      DB_USER: user
+      DB_PASSWORD: password
+      DB_HOST: postgres
+      DB_NAME: db
+      DB_PORT: 5432
+      ALGORITHM: HS256
+      SECRET: secret
+      ACCESS_TOKEN_EXPIRE_MINUTES: 30
+    depends_on:
+      - postgres
+    ports:
+      - 80:80
+    networks:
+      - ms-network
+  
+  ms-signout:
+    restart: always
+    container_name: ms-signout
+    image: ms-signout
+    build:
+      context: ./ms-signout
+      dockerfile: Dockerfile
+    environment:
+      DB_USER: user
+      DB_PASSWORD: password
+      DB_HOST: postgres
+      DB_NAME: db
+      DB_PORT: 5432
+      ALGORITHM: HS256
+      SECRET: secret
+      ACCESS_TOKEN_EXPIRE_MINUTES: 30
+    depends_on:
+      - postgres
+    ports:
+      - 81:81
+    networks:
+      - ms-network
+
+
+  postgres:
+    image: postgres:14
+    environment:
+      POSTGRES_USER: user
+      POSTGRES_PASSWORD: password
+      POSTGRES_DB: db
+    volumes:
+      - ./seed-db:/docker-entrypoint-initdb.d
+    ports:
+      - 5432:5432
+    networks:
+      - ms-network
+
+
+  # postgres_admin:
+  #   image: dpage/pgadmin4:4.28
+  #   depends_on:
+  #     - postgres
+  #   environment: 
+  #     PGADMIN_DEFAULT_EMAIL: admin@admin.de
+  #     PGADMIN_DEFAULT_PASSWORD: password
+  #   ports:
+  #     - "5050:80"
+
+
+networks:
+  ms-network:
+    driver: bridge
